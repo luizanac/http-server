@@ -24,10 +24,8 @@ impl<'buffer> From<&'buffer str> for QueryString<'buffer> {
         for sub_str in s.split('&') {
             let mut key = sub_str;
             let mut val = "";
-            if let Some(i) = s.find('=') {
+            if let Some(i) = sub_str.find('=') {
                 key = &sub_str[..i];
-                println!("{}", key);
-
                 val = &sub_str[i + 1..];
             }
 
