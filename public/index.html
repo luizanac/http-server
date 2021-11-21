@@ -9,8 +9,39 @@
     <title>RustServer</title>
 </head>
 
-<body>
-    <h1>Rust Server</h1>
-</body>
+<style>
+    body {
+        margin: 0;
+    }
 
+    #container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        background-color: red;
+    }
+
+    #facebook-button {
+        background-color: rgb(32, 32, 255);
+        color: white;
+        font-weight: 800;
+        height: 40px;
+        width: 200px;
+        border: none;
+        box-shadow: 2px 2px 10px #777777;
+        cursor: pointer;
+    }
+
+    #facebook-button:hover {
+        background-color: rgb(67, 67, 255);
+    }
+</style>
+
+<body>
+    <div id="container">
+        <button id="facebook-button">LOG IN WITH FACEBOOK</button>
+    </div>
+</body>
 </html>

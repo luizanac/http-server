@@ -1,6 +1,7 @@
 use crate::http::{ParseError, Request, Response, StatusCode};
 use std::io::Read;
 use std::net::TcpListener;
+use std::thread;
 
 pub trait Handler {
     fn handle_request(&mut self, request: &Request) -> Response;
@@ -19,7 +20,7 @@ impl Server {
         Self { addr }
     }
 
-    pub fn run(self, mut handler: impl Handler) {
+    pub fn run<T: Handler>(self, mut handler: T) {
         println!("Listening on {}", self.addr);
 
         let listener = TcpListener::bind(&self.addr).unwrap();
@@ -27,7 +28,7 @@ impl Server {
             //TODO: Change to multi thread
             match listener.accept() {
                 Ok((mut stream, _)) => {
-                    //TODO: Read bodies with size more than 1024 bytes
+                    //TODO: Read body larger than than 1024 bytes
                     let mut buffer = [0; 1024];
                     match stream.read(&mut buffer) {
                         Ok(_) => {
