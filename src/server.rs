@@ -1,7 +1,9 @@
 use crate::http::{ParseError, Request, Response, StatusCode};
+use std::fmt::Error;
 use std::io::Read;
 use std::net::TcpListener;
 use std::thread;
+use std::time::Duration;
 
 pub trait Handler {
     fn handle_request(&mut self, request: &Request) -> Response;
@@ -22,13 +24,10 @@ impl Server {
 
     pub fn run<T: Handler>(self, mut handler: T) {
         println!("Listening on {}", self.addr);
-
         let listener = TcpListener::bind(&self.addr).unwrap();
-        loop {
-            //TODO: Change to multi thread
-            match listener.accept() {
-                Ok((mut stream, _)) => {
-                    //TODO: Read body larger than than 1024 bytes
+        for stream in listener.incoming() {
+            match stream {
+                Ok(mut stream) => {
                     let mut buffer = [0; 1024];
                     match stream.read(&mut buffer) {
                         Ok(_) => {
@@ -49,8 +48,8 @@ impl Server {
                         Err(e) => println!("Failed to read from connection: {}", e),
                     }
                 }
-                Err(e) => println!("Failed to estabilish a connection: {}", e),
-            };
+                Err(e) => println!("Failed to create a connection: {}", e),
+            }
         }
     }
 }
