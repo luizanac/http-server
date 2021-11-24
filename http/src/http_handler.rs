@@ -1,5 +1,5 @@
 use super::server::Handler;
-use crate::http::{Method, Request, Response, StatusCode};
+use crate::{Method, Request, Response, StatusCode};
 use std::fs;
 pub struct HttpHandler {
     public_path: String,

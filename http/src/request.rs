@@ -7,13 +7,13 @@ use std::str;
 use std::str::Utf8Error;
 
 #[derive(Debug)]
-pub struct Request<'buffer> {
-    path: &'buffer str,
-    query_string: Option<QueryString<'buffer>>,
+pub struct Request<'a> {
+    path: &'a str,
+    query_string: Option<QueryString<'a>>,
     method: Method,
 }
 
-impl<'buffer> Request<'buffer> {
+impl<'a> Request<'a> {
     pub fn path(&self) -> &str {
         &self.path
     }
@@ -27,10 +27,10 @@ impl<'buffer> Request<'buffer> {
     }
 }
 
-impl<'buffer> TryFrom<&'buffer [u8]> for Request<'buffer> {
+impl<'a> TryFrom<&'a [u8]> for Request<'a> {
     type Error = ParseError;
 
-    fn try_from(buffer: &'buffer [u8]) -> Result<Request<'buffer>, Self::Error> {
+    fn try_from(buffer: &'a [u8]) -> Result<Request<'a>, Self::Error> {
         let request = str::from_utf8(buffer)?;
 
         let (method, request) = get_next_word(request).ok_or(ParseError::InvalidRequest)?;

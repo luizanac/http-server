@@ -1,10 +1,6 @@
-use crate::http::{ParseError, Request, Response, StatusCode};
-use std::fmt::Error;
+use crate::{ParseError, Request, Response, Route, StatusCode};
 use std::io::Read;
 use std::net::TcpListener;
-use std::thread;
-use std::time::Duration;
-
 pub trait Handler {
     fn handle_request(&mut self, request: &Request) -> Response;
     fn handle_bad_request(&mut self, e: &ParseError) -> Response {
@@ -13,13 +9,14 @@ pub trait Handler {
     }
 }
 
-pub struct Server {
+pub struct Server<'a> {
     addr: String,
+    routes: Option<Vec<Route<'a>>>,
 }
 
-impl Server {
+impl<'a> Server<'a> {
     pub fn new(addr: String) -> Self {
-        Self { addr }
+        Self { addr, routes: None }
     }
 
     pub fn run<T: Handler>(self, mut handler: T) {
